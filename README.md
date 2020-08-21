@@ -1,5 +1,5 @@
 ## Instruction :
-* Just run setup.py with python>3
+* Just run Auto_mux.py with python>3
 
 * ...
 

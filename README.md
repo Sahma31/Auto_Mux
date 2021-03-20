@@ -1,8 +1,9 @@
 ## Instruction :
-* Just run Auto_mux.py with python>3
+* Use python>3
 
-* ...
+* Place the files (raws(*.mkv) sub()) in the folder script
 
+* Just run Auto_mux.py and check logs and enjoy
 
 ## Disclaimer：
 

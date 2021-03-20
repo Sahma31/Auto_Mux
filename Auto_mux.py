@@ -1,6 +1,7 @@
 import os
 import sys
 import ass
+import re
 from fontTools import ttLib
 from guessit import guessit
 
@@ -61,12 +62,27 @@ class Mux:
             for font in self.font_list:
                 # Simple check
                 try:
-                    if font["name"].lower() in sub.lower():
-                        valid_font.append({"name": font["name"], "file": font["file"]})
-                        command_font = command_font + f'--attach-file "{font["file"]}" '
+                    if font["name"].lower() in re.findall(
+                        r"Style:.*?,(.*?),", sub.lower()
+                    ):
+                        valid_font.append(
+                            {
+                                "name": font["name"],
+                                "file": font["file"],
+                            }
+                        )
+                        command_font = (
+                            command_font
+                            + f'--attach-file "{font["file"]}" '
+                        )
                 except:
-                    valid_font.append({"name": font["name"], "file": font["file"]})
-                    command_font = command_font + f'--attach-file "{font["file"]}" '
+                    valid_font.append(
+                        {"name": font["name"], "file": font["file"]}
+                    )
+                    command_font = (
+                        command_font
+                        + f'--attach-file "{font["file"]}" '
+                    )
             return valid_font, command_font
         return valid_font, command_font
 
@@ -75,7 +91,7 @@ class Mux:
         for file in self.files:
             if (
                 file[(len(file) - 4) :].lower() == ".ass"
-                or (file[(len(file) - 4) :]).lower() == ".str"
+                or (file[(len(file) - 4) :]).lower() == ".srt"
             ):
                 # Check if font needed for this sub
                 font, command_font = self.sub_font_parser(file)
@@ -115,7 +131,9 @@ class Mux:
             print("Source of sub ? (Crunchyroll, netflix...)")
             self.source_sub = input()
             print("• The name file example below is correct ? •")
-            print(f"[{self.tag}] {self.name} S{self.season}E01 [{self.info}].mkv")
+            print(
+                f"[{self.tag}] {self.name} S{self.season}E01 [{self.info}].mkv"
+            )
             self.good = input()
             if self.good.lower() in reponse_positive:
                 break
@@ -148,7 +166,7 @@ class Mux:
             return
         else:
             print(
-                "Please try to renames your files for better result, press enter for exit"
+                "Please try to renames your files (01.mkv, 01.ass...) for better result, press enter for exit"
             )
             input()
             sys.exit()
@@ -183,7 +201,9 @@ class Mux:
                     command = command + sub["command_font"]
 
                     # Title of video
-                    command = command + f'--title "[{self.tag}] {self.name}"'
+                    command = (
+                        command + f'--title "[{self.tag}] {self.name}"'
+                    )
 
                     self.command_list.append(
                         {
@@ -201,7 +221,8 @@ class Mux:
             print(
                 "Start mux of \n"
                 f"{command['raw']} Raw with\n"
-                f"{command['sub']} Subtitle \nOutput :\n" + command["name_file"]
+                f"{command['sub']} Subtitle \nOutput :\n"
+                + command["name_file"]
             )
             os.system(command["command"])
             print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
@@ -210,7 +231,7 @@ class Mux:
 if __name__ == "__main__":
     mux = Mux()
     print("••••••••••••••••••••••••••")
-    print("Contact Haru#9999 for any problem")
+    print("Contact Taiga#9999 for any problem")
     print("••••••••••••••••••••••••••")
     print("Search raws")
     mux.get_mkv_list()
@@ -222,7 +243,9 @@ if __name__ == "__main__":
     mux.info_user()
     mux.check_combo()
     mux.mkvmerge_command()
-    print(f"Press enter for start the mux of {len(mux.command_list)} item")
+    print(
+        f"Press enter for start the mux of {len(mux.command_list)} item"
+    )
     input()
     mux.mkvmerge_merge()
     print("Mux end press enter for closing script")

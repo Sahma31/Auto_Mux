@@ -1,6 +1,8 @@
-This script mux your project withou any effort
+This script mux your project without any effort
 ## Instruction :
 * Use python>3
+
+* Change value of variable SUBLANGUAGE / SUBDEFAULT if needed
 
 * Place the files (raws(*.mkv) sub()) in the folder script
 

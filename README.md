@@ -4,7 +4,7 @@ This script mux your project without any effort
 
 * Change value of variable SUBLANGUAGE / SUBDEFAULT if needed
 
-* Place the files (raws(*.mkv) sub()) in the folder script
+* Place the files (raws(*.mkv) subs, fonts) in the folder script
 
 * Just run Auto_mux.py and check logs and enjoy
 

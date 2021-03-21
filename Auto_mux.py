@@ -1,6 +1,5 @@
 import os
 import sys
-import ass
 import re
 from fontTools import ttLib
 from guessit import guessit

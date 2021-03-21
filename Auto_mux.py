@@ -63,7 +63,7 @@ class Mux:
                 # Simple check
                 try:
                     if font["name"].lower() in re.findall(
-                        r"Style:.*?,(.*?),", sub.lower()
+                        r"style:.*?,(.*?),", sub.lower()
                     ):
                         valid_font.append(
                             {

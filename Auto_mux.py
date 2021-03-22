@@ -203,9 +203,9 @@ class Mux:
                     command = command + sub["command_font"]
 
                     # Title of video
-                    command = (
-                        command + f'--title "[{self.tag}] {self.name}"'
-                    )
+                    # command = (
+                    #     command + f'--title "[{self.tag}] {self.name}"'
+                    # )
 
                     self.command_list.append(
                         {

@@ -57,7 +57,7 @@ class Mux:
         valid_font = []
         command_font = ""
         if self.font == True:
-            sub = open(sub_file, "r").read()
+            sub = open(sub_file, "r", encoding="utf-8").read()
             for font in self.font_list:
                 # Simple check
                 try:

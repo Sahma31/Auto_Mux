@@ -61,11 +61,12 @@ class Mux:
             for font in self.font_list:
                 # Simple check
                 try:
-                    test = re.findall(r"\\fn(.*?)\\", sub.lower())
                     if font["name"].lower() in re.findall(
                         r"style:.*?,(.*?),", sub.lower()
                     ) or font["name"].lower() in re.findall(
                         r"\\fn(.*?)\\", sub.lower()
+                    ) or font["name"].lower() in re.findall(
+                        r"{\\fn(.*?)}", sub.lower()
                     ):
                         valid_font.append(
                             {

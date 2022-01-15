@@ -8,6 +8,8 @@ reponse_positive = ["oui", "yep", "ui", "yes", "y"]
 reponse_negative = ["non", "no", "nop", "na", "iee"]
 SUBLANGUAGE = "fre"
 SUBDEFAULT = "yes"
+# All font to ignore on font check (because they are already installed on system)
+basic_font = ["comic sans ms", "verdana"]  # lower value please
 
 
 class Mux:
@@ -55,19 +57,29 @@ class Mux:
     def sub_font_parser(self, sub_file):
         # If the font exist, let's associate them to sub
         valid_font = []
+        font_sub = {}
         command_font = ""
         if self.font == True:
             sub = open(sub_file, "r", encoding="utf-8").read()
+            # Get all font from subtitle
+            temp_font_sub = (
+                re.findall(r"style:.*?,(.*?),", sub.lower())
+                + re.findall(r"\\fn(.*?)\\", sub.lower())
+                + re.findall(r"{\\fn(.*?)}", sub.lower())
+            )
+            # parse/sort them
+            for font in temp_font_sub:
+                if font.lower() in basic_font:
+                    continue
+                if font.lower() not in font_sub:
+                    font_sub[font.lower()] = False
+
+                    continue
             for font in self.font_list:
                 # Simple check
                 try:
-                    if font["name"].lower() in re.findall(
-                        r"style:.*?,(.*?),", sub.lower()
-                    ) or font["name"].lower() in re.findall(
-                        r"\\fn(.*?)\\", sub.lower()
-                    ) or font["name"].lower() in re.findall(
-                        r"{\\fn(.*?)}", sub.lower()
-                    ):
+                    if font["name"].lower() in font_sub:
+                        font_sub[font["name"].lower()] = True
                         valid_font.append(
                             {
                                 "name": font["name"],
@@ -86,8 +98,8 @@ class Mux:
                         command_font
                         + f'--attach-file "{font["file"]}" '
                     )
-            return valid_font, command_font
-        return valid_font, command_font
+            return valid_font, command_font, font_sub
+        return valid_font, command_font, font_sub
 
     def get_sub_list(self):
         self.sub_list = []
@@ -97,7 +109,26 @@ class Mux:
                 or (file[(len(file) - 4) :]).lower() == ".srt"
             ):
                 # Check if font needed for this sub
-                font, command_font = self.sub_font_parser(file)
+                font, command_font, font_sub = self.sub_font_parser(
+                    file
+                )
+                # Check if some font is missing
+                if any(font_sub[font] is False for font in font_sub):
+                    print(
+                        "\n!!!!!!!!! Some font are missing, maybe they are a basic "
+                        "font system, but check this list please : !!!!!!!!!"
+                    )
+                    text = ""
+                    for font in font_sub:
+                        if not font_sub[font]:
+                            text = text + "\n" + font
+                    print(text)
+                    print(
+                        "\nPress enter if you want to ignore these missing fonts\n"
+                        "(Add them to the list 'basic_font' at line 12 if you want ignore them for next time)"
+                    )
+                    check = input()
+
                 # Check episode of sub
                 item = self.guess(file)
                 self.sub_list.append(
